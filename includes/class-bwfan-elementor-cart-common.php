@@ -126,6 +126,28 @@ if ( ! class_exists( 'BWFAN_Elementor_Cart_Common' ) ) {
 		 * @param \ElementorPro\Modules\Forms\Classes\Ajax_Handler $ajax_handler Ajax handler object
 		 */
 		public function handle_elementor_form_submission( $record, $ajax_handler ) {
+			// Get form ID
+			$form_id = 0;
+			if ( method_exists( $record, 'get_form_settings' ) ) {
+				$form_id = $record->get_form_settings( 'id' );
+			}
+
+			// Check if form ID is allowed via filter
+			// If filter returns empty/null/false, allow all forms (backward compatibility)
+			// If filter returns an array, only allow forms with IDs in that array
+			$allowed_form_ids = apply_filters( 'bwfan_elementor_cart_allowed_form_ids', array() );
+			
+			if ( ! empty( $allowed_form_ids ) && is_array( $allowed_form_ids ) ) {
+				// Convert all values to strings for comparison (form IDs can be strings or integers)
+				$allowed_form_ids = array_map( 'strval', $allowed_form_ids );
+				$form_id_str      = strval( $form_id );
+				
+				if ( ! in_array( $form_id_str, $allowed_form_ids, true ) ) {
+					// Form ID not in allowed list, skip processing
+					return;
+				}
+			}
+
 			// Get form fields - try multiple methods (same as FunnelKit Pro)
 			$fields = array();
 			
