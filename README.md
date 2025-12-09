@@ -1,3 +1,8 @@
+for a specific form to  capture cart 
+add_filter('bwfan_elementor_cart_allowed_form_ids', function($allowed_form_ids) {
+    return array('form_id_1', 'form_id_2', 123);
+});
+
 # FunnelKit Automations - Elementor Form Cart Integration
 
 A custom WordPress plugin that captures email addresses from Elementor forms and automatically links them to abandoned carts in FunnelKit Automations (formerly Autonami). This solution is upgrade-safe and reusable.
